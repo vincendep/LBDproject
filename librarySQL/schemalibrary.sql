@@ -5,14 +5,14 @@ use library;
 
 create table pubblicazione(
 	id int auto_increment primary key,
-    isbn int unique check (isbn >= 0),
+    isbn varchar(200) unique,
 	titolo varchar(200) not null,
     editore	varchar(200) not null
 );
 
 create table capitolo(
 	id_pubblicazione int not null,
-    numero int not null check(numero > 0),
+    numero int not null check (numero > 0),
     titolo varchar(200),
     primary key(id_pubblicazione, numero),
     foreign key(id_pubblicazione) references pubblicazione(id)
@@ -38,7 +38,7 @@ create table sorgente(
 
 create table info_pubblicazione(
 		id_pubblicazione int primary key,
-        data_pubblicazione date not null,
+        data_pubblicazione year not null,
         numero_pagine int not null,
         edizione int not null,
         lingua varchar(200) not null,
@@ -49,7 +49,7 @@ create table info_pubblicazione(
 create table ristampa(
 	id_pubblicazione int not null,
     numero int not null,
-    data_ristampa date not null,
+    data_ristampa year not null,
     primary key(id_pubblicazione, numero),
     foreign key(id_pubblicazione) references pubblicazione(id)
 		on delete cascade
@@ -93,8 +93,7 @@ create table recensione(
 	id_utente int not null,
     id_pubblicazione int not null,
     testo varchar(200) not null,
-    data_recensione date,
-    ora time,
+    data_ora datetime default current_timestamp,
     moderata enum('Si', 'No', 'In attesa') default 'In attesa',
     primary key(id_utente, id_pubblicazione),
     foreign key(id_utente) references utente(id),
@@ -104,7 +103,7 @@ create table recensione(
 create table likes(
 	id_utente int not null,
     id_pubblicazione int not null,
-    data_like date,
+    data_ora datetime default current_timestamp,
     primary key(id_utente, id_pubblicazione),
     foreign key(id_utente) references utente(id),
     foreign key(id_pubblicazione) references pubblicazione(id)
@@ -114,9 +113,9 @@ create table modifica(
 	id int auto_increment primary key,
     id_utente int not null,
     id_pubblicazione int not null,
-    data_modifica timestamp,
+    data_ora datetime default current_timestamp,
     descrizione varchar(200),
-    tipo enum('Inserimento', 'Modifica', 'Approvazione') not null,
+    tipo enum('Inserimento', 'Modifica') not null,
     foreign key(id_utente) references utente(id),
     foreign key(id_pubblicazione) references pubblicazione(id)
 );
