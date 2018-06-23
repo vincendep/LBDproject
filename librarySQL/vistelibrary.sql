@@ -1,21 +1,21 @@
 -- visualizza le ultime 10 pubblicazioni inserite
 drop view if exists query2;
 create view query2 as
-select p.titolo, p.isbn, m.data_modifica as data_inserimento  
+select p.titolo, p.isbn, m.data_ora as data_inserimento  
 from pubblicazione p, modifica m
 where p.id = m.id_pubblicazione 
 	and m.tipo = 'Inserimento'
-order by m.data_modifica
+order by m.data_ora
 limit 10;
 
 -- visualizza le pubblicazioni modificate negli ultimi 30 giorni
 drop view if exists query3;
 create view query3 as
-select p.titolo, p.isbn, m.data_modifica
+select p.titolo, p.isbn, m.data_ora
 from pubblicazione p, modifica m
 where p.id = m.id_pubblicazione 
 	and m.tipo = 'Modifica' 
-    and m.data_modifica >= (curdate() - interval 1 month);
+    and m.data_ora >= (curdate() - interval 1 month);
     
 -- visualizza gli utenti che hanno inserito piu pubblicazioni
 drop view if exists query4;
@@ -64,3 +64,9 @@ from pubblicazione p, sorgente s
 where p.id = s.id_pubblicazione
 	and s.tipo = 'Download'
 order by p.titolo;
+
+drop view if exists query17;
+create view query17 as
+select * from pubblicazione p join ristampa r on p.id = r.id_pubblicazione
+group by p.id
+having max(r.numero);
