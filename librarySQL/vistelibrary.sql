@@ -31,7 +31,7 @@ limit 50;
 -- visualizza pubblicazioni e autori ordinati per titolo
 drop view if exists query6;
 create view query6 as
-select p.titolo, group_concat(a.cognome separator ', ') as autori, p.editore, i.data_pubblicazione
+select p.titolo, group_concat(a.cognome separator ', ') as autori, p.editore, i.anno_pubblicazione
 from pubblicazione p, info_pubblicazione i, autore a, scrittura s
 where p.id = i.id_pubblicazione
 	and p.id = s.id_pubblicazione
@@ -65,8 +65,8 @@ where p.id = s.id_pubblicazione
 	and s.tipo = 'Download'
 order by p.titolo;
 
+-- visualizza il catalogo insieme all'ultima ristampa di ogni pubblicazione
 drop view if exists query17;
 create view query17 as
-select * from pubblicazione p join ristampa r on p.id = r.id_pubblicazione
-group by p.id
-having max(r.numero);
+select p.titolo, p.isbn, p.editore, max(r.numero) as ultima_ristampa from pubblicazione p left outer join ristampa r on p.id = r.id_pubblicazione
+group by p.id;

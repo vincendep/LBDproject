@@ -25,18 +25,20 @@ end$
 drop procedure if exists query7$
 create procedure query7(id integer)
 begin
-select p.id, p.titolo, concat_ws(", ", a.cognome) as autori, p.editore, p.isbn, i.edizione, i.data_pubblicazione, i.numero_pagine, i.lingua
+select p.id, p.titolo, group_concat(a.cognome separator ' ,') as autori, p.editore, p.isbn, i.edizione, i.anno_pubblicazione, i.numero_pagine, i.lingua
 from pubblicazione p join scrittura s on p.id = s.id_pubblicazione 
 	join autore a on a.id = s.id_autore 
-	join info_pubblicazione i on i.id_pubblicazioen = p.id
-group by p.id, p.titolo, p.editore, p.isbn, i.edizione, i.data_pubblicazione, i.numero_pagine, i.lingua;
+	join info_pubblicazione i on i.id_pubblicazione = p.id
+where p.id = id
+group by p.id;
 end$
 
+-- TO FIX
 -- ricerca pubblicazione per ISBN, titolo, autore e parola chiave
 drop procedure if exists query8$
 create procedure query8(isbn int, titolo varchar(200), autore varchar(200), parola varchar(200))
 begin
-select p.titolo, autore, p.editore, p.isbn 
+select p.titolo, a.cognome as autore, p.editore, p.isbn 
 from pubblicazione p join scrittura s on p.id = s.id_pubblicazione 
 	join autore a on a.id = s.id_autore 
     join tag t on t.id_pubblicazione = p.id 
@@ -57,10 +59,10 @@ end$
  
 -- approva una recensione
 drop procedure if exists query10$
-create procedure query10(id int)
+create procedure query10(id_utente int, id_pubblicazione int)
 begin
 update recensione r set moderata = 'Si'
-where r.id = id;
+where r.id_utente = id_utente and r.id_pubblicazione = id_pubblicazione;
 end$
 
 -- inserisce un like ad una pubblicazione
@@ -91,8 +93,8 @@ drop procedure if exists query18$
 create procedure query18(id_pub int)
 begin
 select p.titolo, a.cognome as autore
-from pubblicazione p join scittura s on p.id = s.id_pubblicazione join autore a on a.id = s.id_scrittore
-where a.id = (select a.id from scrittura s where s.id_pubblicazione = id_pub);
+from pubblicazione p join scrittura s on p.id = s.id_pubblicazione join autore a on a.id = s.id_autore
+where a.id = (select sc.id_autore from scrittura sc where sc.id_pubblicazione = id_pub);
 end$ 
 
 
