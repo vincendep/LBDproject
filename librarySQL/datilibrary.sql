@@ -17,7 +17,7 @@ delete from utente;
 
 insert into autore values (1, 'Hermann', 'Hesse'), (2, 'Gabriel', 'Garcia Marquez'), 
 						  (3, 'George', 'Orwell'), (4, 'William', 'Goldinig'),
-						  (5, 'Michail', 'Bulgakov'), (6, 'Chuck', 'Palaniuk'), 
+						  (5, 'Michail', 'Bulgakov'), (6, 'Chuck', 'Palahniuk'), 
                           (7, 'Philip', 'Roth'),(8, 'Paolo', 'Atzeni'),
                           (9, 'Stefano', 'Ceri'),(10, 'Stefano', 'Paraboschi');
                           
@@ -64,7 +64,7 @@ insert into utente values (1, 'vindep@lib.com', '1234', 'Vincenzo', 'De Petris',
                           
 insert into likes (id_utente,id_pubblicazione) values (1, 2), (1, 5), (1, 7), (1, 9);
 
-insert into parola_chiave values (1, 'Om'), (2, 'Buddah'), (3, 'America'), (4, 'Diavolo'), (5, 'Vietnam');
+insert into parola_chiave values (1, 'Om'), (2, 'Buddha'), (3, 'America'), (4, 'Diavolo'), (5, 'Vietnam');
 
 insert into tag values (8, 1),(8, 2),(1, 3),(2, 4),(1, 5);
 
@@ -84,4 +84,4 @@ insert into modifica (id_utente, id_pubblicazione, tipo) values (1, 1, 'Inserime
 
 insert into recensione (id_utente, id_pubblicazione, testo) values (1, 1, 'Bello'), (1, 4, 'Cosi Cosi'), (1, 5, 'Magnifico');
 
-insert into sorgente values (1, 1, 'wwww.pastoraleamericanna.lib', 'Download', '.zip', 'fulltext');
+insert into sorgente values (1, 1, 'wwww.pastoraleamericana.lib', 'Download', '.zip', 'fulltext');

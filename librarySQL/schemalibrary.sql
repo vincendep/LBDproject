@@ -15,14 +15,15 @@ create table capitolo(
     numero int not null,
     titolo varchar(200),
     primary key(id_pubblicazione, numero),
-    foreign key(id_pubblicazione) references pubblicazione(id)
-		on delete cascade
+    constraint capitolo_pubblicazione foreign key(id_pubblicazione) references pubblicazione(id)
+		on delete cascade on update cascade
 );
 
 create table autore(
 	id int unsigned auto_increment not null primary key,
     nome varchar(200) not null,
-    cognome varchar(200) not null
+    cognome varchar(200) not null,
+    constraint noOmonini unique(nome, cognome)
 );
 
 create table sorgente(
@@ -32,8 +33,8 @@ create table sorgente(
     tipo enum('Download', 'Immagine', 'Acquisto'),
     formato varchar(200),
     descrizione varchar(200),
-    foreign key(id_pubblicazione) references pubblicazione(id)
-		on delete cascade
+    constraint sorgente_pubblicazione foreign key(id_pubblicazione) references pubblicazione(id)
+		on delete cascade on update cascade
 );
 
 create table info_pubblicazione(
@@ -42,8 +43,8 @@ create table info_pubblicazione(
         numero_pagine int not null,
         edizione int not null,
         lingua varchar(200) not null,
-        foreign key(id_pubblicazione) references pubblicazione(id)
-			on delete cascade
+        constraint infoPubblicazione_pubblicazione foreign key(id_pubblicazione) references pubblicazione(id)
+			on delete cascade on update cascade
 );
 
 create table ristampa(
@@ -51,8 +52,8 @@ create table ristampa(
     numero int not null,
     anno_ristampa year not null,
     primary key(id_pubblicazione, numero),
-    foreign key(id_pubblicazione) references pubblicazione(id)
-		on delete cascade
+    constraint ristampa_pubblicazione foreign key(id_pubblicazione) references pubblicazione(id)
+		on delete cascade on update cascade
 );
 
 create table parola_chiave(
@@ -64,20 +65,20 @@ create table tag(
 	id_pubblicazione int unsigned not null,
     id_parola int unsigned not null,
     primary key(id_pubblicazione, id_parola),
-    foreign key(id_pubblicazione) references pubblicazione(id)
-		on delete cascade,
-    foreign key(id_parola) references parola_chiave(id)
-		on delete cascade
+    constraint tag_pubblicazione foreign key(id_pubblicazione) references pubblicazione(id)
+		on delete cascade on update cascade,
+    constraint tag_parolaChiave foreign key(id_parola) references parola_chiave(id)
+		on delete cascade on update cascade
 );
 	
 create table scrittura(
 	id_pubblicazione int unsigned not null,
     id_autore int unsigned not null,
     primary key(id_pubblicazione, id_autore),
-    foreign key(id_pubblicazione) references pubblicazione(id)
-		on delete cascade,
-    foreign key(id_autore) references autore(id)
-		on delete cascade
+    constraint scrittura_pubblicazione foreign key(id_pubblicazione) references pubblicazione(id)
+		on delete cascade on update cascade,
+    constraint scrittura_autore foreign key(id_autore) references autore(id)
+		on delete cascade on update cascade
 );
 
 create table utente(
@@ -96,8 +97,10 @@ create table recensione(
     data_ora datetime default current_timestamp,
     moderata enum('Si', 'No', 'In attesa') default 'In attesa',
     primary key(id_utente, id_pubblicazione),
-    foreign key(id_utente) references utente(id) on delete cascade,
-    foreign key(id_pubblicazione) references pubblicazione(id) on delete cascade
+    constraint recensione_utente foreign key(id_utente) references utente(id) 
+		on delete cascade on update cascade,
+    constraint recensione_pubblicazione foreign key(id_pubblicazione) references pubblicazione(id) 
+		on delete cascade on update cascade
 );
 
 create table likes(
@@ -105,20 +108,34 @@ create table likes(
     id_pubblicazione int unsigned not null,
     data_ora datetime default current_timestamp,
     primary key(id_utente, id_pubblicazione),
-    foreign key(id_utente) references utente(id) on delete cascade,
-    foreign key(id_pubblicazione) references pubblicazione(id) on delete cascade
+    constraint likes_utente foreign key(id_utente) references utente(id) 
+		on delete cascade on update cascade,
+    constraint likes_pubblicazione foreign key (id_pubblicazione) references pubblicazione(id) 
+		on delete cascade on update cascade
 );
 
 create table modifica(
 	id int unsigned auto_increment not null primary key,
-    id_utente int unsigned not null,
-    id_pubblicazione int unsigned not null,
+    id_utente int unsigned,
+    id_pubblicazione int unsigned,
     data_ora datetime default current_timestamp,
     descrizione varchar(200),
-    tipo enum('Inserimento', 'Modifica', 'Cancellazione') not null,
-    foreign key(id_utente) references utente(id),
-    foreign key(id_pubblicazione) references pubblicazione(id)
+    tipo enum('Inserimento', 'Modifica') not null,
+    constraint modifica_utente foreign key(id_utente) references utente(id) 
+		on delete set null on update cascade,
+    constraint modifica_pubblicazione foreign key(id_pubblicazione) references pubblicazione(id) 
+		on delete set null on update cascade 
 );
 
 
+create user 'libraryAdmin'@'localhost' identified by 'admin';
+grant all on library.* to 'libraryAdmin'@'localhost';
+
+create user 'libraryActiveUser'@'localhost' identified by 'active';
+grant select, insert on library.* to 'libraryActiveUser'@'localhost';
+
+create user 'libraryPassiveUser'@'localhost' identified by 'passive';
+grant select on library.* to 'libraryPassiveUser'@'localhost';
+grant insert on library.likes  to 'libraryPassiveUser'@'localhost';
+grant insert on library.recensione  to 'libraryPassiveUser'@'localhost';
     
