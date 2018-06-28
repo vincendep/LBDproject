@@ -41,7 +41,7 @@ Create Date: 27/06/18
 drop procedure if exists query3$
 create procedure query3()
 begin
-select p.titolo, p.isbn, to_days(curdate()) - to_days(m.data_ora) as days_ago, m.descrizione
+select p.titolo, p.isbn, m.data_ora as data_modifica, m.descrizione
 from pubblicazione p, modifica m
 where p.id = m.id_pubblicazione 
 	and m.tipo = 'Modifica' 
@@ -214,7 +214,8 @@ Param: @pubblicazione = titolo pubblicazione
 */drop procedure if exists query13$
 create procedure query13(pubblicazione varchar(200))
 begin
-select * from recensione r
+select p.titolo, u.email, r.data_ora, r.moderata 
+from recensione r join pubblicazine p on p.di = r.id_pubblicazione join utente u on u.id = r.id_utente
 where r.id_pubblicazione in (select p.id from pubblicazione p where p.titolo = pubblicazione);
 end$
 
@@ -242,7 +243,8 @@ Param: @pubblicazione = titolo della pubblicazione
 drop procedure if exists query15$
 create procedure query15(pubblicazione varchar(200))
 begin
-select * from modifica m
+select p.titolo as pubblicazione, u.email as utente, m.tipo, m.data_ora, m.descrizione 
+from modifica m join utente u on u.id = m.id_utente join pubblicazione p on p.id = m.id_pubblicazione
 where m.id_pubblicazione in (select p.id from pubblicazione p where p.titolo = pubblicazione) and tipo = 'Modifica';
 end$
 
@@ -271,7 +273,8 @@ Create Date: 27/06/18
 drop procedure if exists query17$
 create procedure query17()
 begin
-select p.titolo, p.isbn, p.editore, max(r.numero) as ultima_ristampa from pubblicazione p left outer join ristampa r on p.id = r.id_pubblicazione
+select p.titolo, p.isbn, p.editore, max(r.numero) as ultima_ristampa, r.anno_ristampa 
+from pubblicazione p left outer join ristampa r on p.id = r.id_pubblicazione
 group by p.id;
 end$
 

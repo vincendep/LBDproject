@@ -20,7 +20,7 @@ group by p.id;
 
 drop view if exists readableLikes;
 create view readableLikes as
-select u.email, p.titolo, l.data_ora
+select u.email as utente, p.titolo, l.data_ora
 from utente u join likes l on u.id = l.id_utente join pubblicazione p on p.id = l.id_pubblicazione
 order by u.email;
 

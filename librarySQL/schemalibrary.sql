@@ -127,13 +127,15 @@ create table modifica(
 		on delete set null on update cascade
 );
 
-
+drop user if exists 'libraryAdmin'@'localhost';
 create user 'libraryAdmin'@'localhost' identified by 'admin';
 grant all on library.* to 'libraryAdmin'@'localhost';
 
+drop user if exists 'libraryActiveUser'@'localhost';
 create user 'libraryActiveUser'@'localhost' identified by 'active';
 grant select, insert on library.* to 'libraryActiveUser'@'localhost';
 
+drop user if exists 'libraryPassiveUser'@'localhost';
 create user 'libraryPassiveUser'@'localhost' identified by 'passive';
 grant select on library.* to 'libraryPassiveUser'@'localhost';
 grant insert on library.likes  to 'libraryPassiveUser'@'localhost';
