@@ -301,19 +301,18 @@ Param: @titolo = titolo pubblicazione
 Param: @editore = editore pubblicazione
 */
 drop procedure if exists inserisciPubblicazione$
-create procedure inserisciPubblicazione(email varchar(200), isbn int, titolo varchar(200), editore varchar(200), id int unsigned)
+create procedure inserisciPubblicazione(email varchar(200), isbn int, titolo varchar(200), editore varchar(200))
 begin 
-declare present boolean;
-declare id_utente int unsigned;
+declare id_p int unsigned;
+declare id_u int unsigned;
 
-select u.id from utente u where u.email = email into id_utente;
-set present = found_rows() > 0;
+select u.id from utente u where u.email = email into id_u;
 
-if (present) then 
+if (found_rows() > 0) then 
 	begin
 	insert into pubblicazione(isbn, titolo, editore) values (isbn, titolo, editore);
-    set id = last_insert_id();
-    insert into modifica(id_utente, id_pubblicazione, tipo) values (id_utente, last_insert_id(), 'Inserimento');
+    set id_p = last_insert_id();
+    insert into modifica(id_utente, id_pubblicazione, tipo) values (id_u, id_p, 'Inserimento');
 	end;
 end if;
 end$
