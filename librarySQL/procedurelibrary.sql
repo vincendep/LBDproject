@@ -215,7 +215,7 @@ Param: @pubblicazione = titolo pubblicazione
 create procedure query13(pubblicazione varchar(200))
 begin
 select p.titolo, u.email, r.data_ora, r.moderata 
-from recensione r join pubblicazine p on p.di = r.id_pubblicazione join utente u on u.id = r.id_utente
+from recensione r join pubblicazione p on p.id = r.id_pubblicazione join utente u on u.id = r.id_utente
 where r.id_pubblicazione in (select p.id from pubblicazione p where p.titolo = pubblicazione);
 end$
 
@@ -245,7 +245,7 @@ create procedure query15(pubblicazione varchar(200))
 begin
 select p.titolo as pubblicazione, u.email as utente, m.tipo, m.data_ora, m.descrizione 
 from modifica m join utente u on u.id = m.id_utente join pubblicazione p on p.id = m.id_pubblicazione
-where m.id_pubblicazione in (select p.id from pubblicazione p where p.titolo = pubblicazione) and tipo = 'Modifica';
+where m.id_pubblicazione in (select p.id from pubblicazione p where p.titolo = pubblicazione) and m.tipo = 'Modifica';
 end$
 
 
