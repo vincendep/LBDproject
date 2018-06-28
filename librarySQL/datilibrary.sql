@@ -28,7 +28,7 @@ insert into pubblicazione values (1, '978-88-06-21803-4', 'Pastorale Americana',
 								 (5, '978-88-04-52136-5', 'Invisible Monsters', 'Mondadori'),
                                  (6, '978-0-099-43796-3', 'Lullaby', 'Vintage Books'),
                                  (7, '978-88-04-66824-4', 'L\'amore ai tempi del colera', 'Mondadori'),
-                                 (8,                null, 'Siddharta', 'Adelphi'),
+                                 (8,             '88023', 'Siddharta', 'Adelphi'),
                                  (9, '978-88-38-69445-5', 'Basi di dati', 'McGraw-Hill Education'),
                                  (10, '978-88-04-52438-0', 'Soffocare', 'Mondadori');
 

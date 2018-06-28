@@ -124,7 +124,7 @@ create table modifica(
     constraint modifica_utente foreign key(id_utente) references utente(id) 
 		on delete set null on update cascade,
     constraint modifica_pubblicazione foreign key(id_pubblicazione) references pubblicazione(id) 
-		on delete set null on update cascade 
+		on delete set null on update cascade
 );
 
 

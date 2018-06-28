@@ -41,11 +41,11 @@ Create Date: 27/06/18
 drop procedure if exists query3$
 create procedure query3()
 begin
-select p.titolo, p.isbn, m.data_ora
+select p.titolo, p.isbn, to_days(curdate()) - to_days(m.data_ora) as days_ago, m.descrizione
 from pubblicazione p, modifica m
 where p.id = m.id_pubblicazione 
 	and m.tipo = 'Modifica' 
-    and m.data_ora >= (curdate() - interval 1 month);
+    and to_days(curdate()) - to_days(m.data_ora) <= 30;
 end$
 
 
@@ -343,8 +343,8 @@ if(found_rows() > 0) then
 	insert into scrittura(id_pubblicazione, id_autore) values (last_insert_id(), idAut);
 else 
 begin
-	insert into autore(nome, cognome) values (c_nome, c_cognome);
 	set idPub = last_insert_id();
+	insert into autore(nome, cognome) values (c_nome, c_cognome);
     insert into scrittura(id_pubblicazione, id_autore) values (idPub, last_insert_id());
 end;
 end if;
