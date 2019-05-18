@@ -1,2 +1,2 @@
 # LBDproject
-LBDexam17/18
+LabDatabase course final project @ UnivAq 
